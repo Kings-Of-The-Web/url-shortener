@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=url_shortener
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+    volumes:
+      - ./src:/var/www/html
+    networks:
+      - url-shortener-network
+
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=url_shortener
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - url-shortener-network
+
+volumes:
+  postgres_data:
+
+networks:
+  url-shortener-network:
+    driver: bridge
