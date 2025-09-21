@@ -1,0 +1,10 @@
+.env
+.env.local
+
+# ide
+.vscode
+.idea
+.DS_Store
+
+# logs
+logs/
